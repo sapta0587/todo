@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - '3001:3001'
+    # No bind mount — better-sqlite3 is a native module and must
+    # match the container OS. Rebuild with --build when the backend code changes.
+
+  frontend:
+    build: ./frontend
+    ports:
+      - '5173:5173'
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      # Tells Vite to proxy /api requests to the backend container
+      - BACKEND_URL=http://backend:3001
+    depends_on:
+      - backend
