@@ -5,8 +5,10 @@ services:
     build: ./backend
     ports:
       - '3001:3001'
-    # No bind mount — better-sqlite3 is a native module and must
-    # match the container OS. Rebuild with --build when the backend code changes.
+    volumes:
+      # Only mount the data directory — better-sqlite3 is a native module
+      # and must stay compiled for Linux inside the container
+      - ./data:/app/data
 
   frontend:
     build: ./frontend

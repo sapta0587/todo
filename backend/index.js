@@ -2,12 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const Database = require('better-sqlite3');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Use a file next to this script so it persists in Docker volumes
-const db = new Database(path.join(__dirname, 'todos.db'));
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'data');
+fs.mkdirSync(DATA_DIR, { recursive: true });
+const db = new Database(path.join(DATA_DIR, 'todos.db'));
 
 // Create the todos table (safe to run every time)
 db.exec(`
